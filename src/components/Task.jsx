@@ -11,9 +11,7 @@ const Task = ({ value }) => {
   return (
     <article className="py-4 px-5 flex justify-between items-center rounded-lg shadow-lg">
       <input type="checkbox" id={value} onChange={handleChange} />
-      <label htmlFor={value} className="pl-2 w-4/5 text-xl break-words">
-        {value}
-      </label>
+      <label className="pl-2 w-4/5 text-xl break-words">{value}</label>
       <MdDelete className="text-2xl" />
     </article>
   );

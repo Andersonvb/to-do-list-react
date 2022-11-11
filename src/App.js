@@ -7,9 +7,15 @@ function App() {
   const [taskComponents, setTaskComponents] = useState([]);
 
   const renderTasks = () => {
-    let taskArray = tasks.map((task) => {
-      return <Task value={task} />;
-    });
+    if (tasks.length === 0) {
+      return;
+    }
+
+    let taskArray = [];
+    for (let i = 0; i < tasks.length; i++) {
+      taskArray.push(<Task value={tasks[i]} id={i} key={i} />);
+    }
+
     setTaskComponents(taskArray);
   };
 
@@ -18,18 +24,22 @@ function App() {
       return;
     }
 
-    sessionStorage.setItem(
-      "taskList",
-      sessionStorage.getItem("taskList") + data + ","
-    );
+    if (sessionStorage.getItem("taskList") === null) {
+      sessionStorage.setItem("taskList", data);
+    } else {
+      sessionStorage.setItem(
+        "taskList",
+        sessionStorage.getItem("taskList") + "," + data
+      );
+    }
 
-    let sessionData = sessionStorage.getItem("taskList");
-    let listData = sessionData.split(",");
+    let listData = sessionStorage.getItem("taskList").split(",");
     setTasks(listData);
   };
 
   useEffect(() => {
     renderTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks]);
 
   return (
