@@ -19,11 +19,11 @@ const AddTask = ({ childToParentFunc }) => {
           type="text"
           onChange={handleChange}
           placeholder="New Task"
-          className="w-4/6 md:w-5/6 pl-5 rounded-l-lg outline-0 focus:outline-sky-700 focus:outline-1"
+          className="w-4/6 md:w-4/6 lg:w-5/6 pl-5 rounded-l-lg outline-0 focus:outline-sky-700 focus:outline-1"
         />
         <button
           onClick={handleClick}
-          className="w-2/6 md:w-1/6 px-5 text-white font-bold bg-gradient-to-r from-sky-700 to-cyan-500"
+          className="w-2/6 md:w-2/6 lg:w-1/6 px-5 text-white font-bold bg-gradient-to-r from-sky-700 to-cyan-500 rounded-r-lg"
         >
           Add Task
         </button>
