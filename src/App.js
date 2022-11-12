@@ -5,6 +5,7 @@ import AddTask from "./components/AddTask.jsx";
 function App() {
   const [taskComponents, setTaskComponents] = useState([]);
   const [idDeleteItem, setIdDeleteItem] = useState(0);
+  const [deletingItem, setDeletingItem] = useState(false);
 
   const updateSessionVariable = () => {
     sessionStorage.setItem("taskList", JSON.stringify([]));
@@ -12,6 +13,8 @@ function App() {
       return element.props.value;
     });
     sessionStorage.setItem("taskList", JSON.stringify(tempArray));
+    setDeletingItem(false);
+    renderTasks();
   };
 
   const deleteTask = (idValue) => {
@@ -19,8 +22,10 @@ function App() {
     const newTaskComponentsList = taskComponentsList.filter((element) => {
       return element.props.idValue !== idValue;
     });
+
+    setIdDeleteItem(0);
+    setDeletingItem(true);
     setTaskComponents(newTaskComponentsList);
-    updateSessionVariable();
   };
 
   const deleteTaskRequest = (idValue) => {
@@ -40,6 +45,8 @@ function App() {
         />
       );
     }
+    console.log(taskComponentsList);
+    console.log(idDeleteItem);
     setTaskComponents(taskComponentsList);
   };
 
@@ -51,7 +58,15 @@ function App() {
   };
 
   useEffect(() => {
-    deleteTask(idDeleteItem);
+    if (deletingItem) {
+      updateSessionVariable();
+    }
+  }, [taskComponents]);
+
+  useEffect(() => {
+    if (idDeleteItem !== 0) {
+      deleteTask(idDeleteItem);
+    }
   }, [idDeleteItem]);
 
   useEffect(() => {
