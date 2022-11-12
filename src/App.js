@@ -78,9 +78,9 @@ function App() {
 
   return (
     <main className="w-screen flex justify-center p-5 ">
-      <div className="lg:w-3/5">
+      <div className="flex flex-col gap-5 lg:w-3/5">
         <AddTask childToParentFunc={getInputData} />
-        <div>{taskComponents}</div>
+        <div className="flex flex-col gap-5">{taskComponents}</div>
       </div>
     </main>
   );

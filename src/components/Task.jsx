@@ -13,9 +13,9 @@ const Task = ({ value, idValue,deleteFunc }) => {
   };
 
   return (
-    <article className="py-4 px-5 flex justify-between items-center rounded-lg shadow-lg">
-      <input type="checkbox" id={value} onChange={handleChange} />
-      <label className="pl-2 w-4/5 text-xl break-words">{value}</label>
+    <article className="group py-4 px-5 flex justify-between items-center rounded-lg shadow-lg hover:bg-sky-600">
+      <input type="checkbox" id={idValue} onChange={handleChange} />
+      <label htmlFor={idValue} className="group-hover:text-white w-4/5 text-xl break-words">{value}</label>
       <MdDelete className="text-2xl" onClick={handleClick} />
     </article>
   );
