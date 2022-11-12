@@ -3,44 +3,60 @@ import Task from "./components/Task.jsx";
 import AddTask from "./components/AddTask.jsx";
 
 function App() {
-  const [tasks, setTasks] = useState([]);
   const [taskComponents, setTaskComponents] = useState([]);
+  const [idDeleteItem, setIdDeleteItem] = useState(0);
 
-  const renderTasks = () => {
-    if (tasks.length === 0) {
-      return;
-    }
-
-    let taskArray = [];
-    for (let i = 0; i < tasks.length; i++) {
-      taskArray.push(<Task value={tasks[i]} id={i} key={i} />);
-    }
-
-    setTaskComponents(taskArray);
+  const updateSessionVariable = () => {
+    sessionStorage.setItem("taskList", JSON.stringify([]));
+    const tempArray = taskComponents.map((element) => {
+      return element.props.value;
+    });
+    sessionStorage.setItem("taskList", JSON.stringify(tempArray));
   };
 
-  const getInputData = (data) => {
-    if (!data) {
-      return;
-    }
+  const deleteTask = (idValue) => {
+    const taskComponentsList = taskComponents;
+    const newTaskComponentsList = taskComponentsList.filter((element) => {
+      return element.props.idValue !== idValue;
+    });
+    setTaskComponents(newTaskComponentsList);
+    updateSessionVariable();
+  };
 
-    if (sessionStorage.getItem("taskList") === null) {
-      sessionStorage.setItem("taskList", data);
-    } else {
-      sessionStorage.setItem(
-        "taskList",
-        sessionStorage.getItem("taskList") + "," + data
+  const deleteTaskRequest = (idValue) => {
+    setIdDeleteItem(idValue);
+  };
+
+  const renderTasks = () => {
+    const taskComponentsList = [];
+    const sessionArray = JSON.parse(sessionStorage.getItem("taskList"));
+    for (let i = 0; i < sessionArray.length; i++) {
+      taskComponentsList.push(
+        <Task
+          value={sessionArray[i]}
+          deleteFunc={deleteTaskRequest}
+          idValue={i + 1}
+          key={i + 1}
+        />
       );
     }
+    setTaskComponents(taskComponentsList);
+  };
 
-    let listData = sessionStorage.getItem("taskList").split(",");
-    setTasks(listData);
+  const getInputData = (value) => {
+    const tempArray = JSON.parse(sessionStorage.getItem("taskList"));
+    tempArray.push(value);
+    sessionStorage.setItem("taskList", JSON.stringify(tempArray));
+    renderTasks();
   };
 
   useEffect(() => {
-    renderTasks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasks]);
+    deleteTask(idDeleteItem);
+  }, [idDeleteItem]);
+
+  useEffect(() => {
+    sessionStorage.setItem("taskList", JSON.stringify([]));
+  }, []);
 
   return (
     <main className="w-screen flex justify-center p-5 ">

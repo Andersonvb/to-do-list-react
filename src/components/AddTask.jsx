@@ -9,7 +9,10 @@ const AddTask = ({ childToParentFunc }) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    childToParentFunc(value);
+    if (value) {
+      childToParentFunc(value);
+    }
+    
   };
 
   return (
