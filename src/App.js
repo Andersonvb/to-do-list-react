@@ -45,12 +45,13 @@ function App() {
         />
       );
     }
-    console.log(taskComponentsList);
-    console.log(idDeleteItem);
     setTaskComponents(taskComponentsList);
   };
 
   const getInputData = (value) => {
+    if (sessionStorage.getItem("taskList") === null) {
+      sessionStorage.setItem("taskList", JSON.stringify([]));
+    }
     const tempArray = JSON.parse(sessionStorage.getItem("taskList"));
     tempArray.push(value);
     sessionStorage.setItem("taskList", JSON.stringify(tempArray));
@@ -70,7 +71,9 @@ function App() {
   }, [idDeleteItem]);
 
   useEffect(() => {
-    sessionStorage.setItem("taskList", JSON.stringify([]));
+    if (sessionStorage.getItem("taskList") !== null) {
+      renderTasks();
+    }
   }, []);
 
   return (
