@@ -35,7 +35,9 @@ function App() {
   };
 
   const decreaseCount = () => {
-    setPendingTask((prev) => prev - 1);
+    if (pendingTask > 0) {
+      setPendingTask((prev) => prev - 1);
+    }
   };
 
   const deleteTaskRequest = (idValue) => {
