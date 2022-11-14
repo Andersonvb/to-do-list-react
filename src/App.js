@@ -7,6 +7,123 @@ function App() {
   const [idDeleteItem, setIdDeleteItem] = useState(0);
   const [deletingItem, setDeletingItem] = useState(false);
   const [pendingTask, setPendingTask] = useState(0);
+  const [taskCounter, setTaskCounter] = useState(1);
+
+  /*
+  {
+    id: 0,
+    value: "Task",
+    checked: false
+  }
+  */
+
+  // Get the task from the input
+  const getInputData = (value) => {
+    if (sessionStorage.getItem("taskList") === null) {
+      sessionStorage.setItem("taskList", JSON.stringify([]));
+    }
+
+    const tempArray = JSON.parse(sessionStorage.getItem("taskList"));
+
+    const id = taskCounter;
+    const tempTask = {
+      id: id,
+      value: value,
+      checked: false,
+    };
+
+    tempArray.push(tempTask);
+    setTaskCounter((prev) => prev + 1);
+
+    sessionStorage.setItem("taskList", JSON.stringify(tempArray));
+
+    increaseCount();
+    renderTasks();
+  };
+
+  // Render tasks on screen
+  const renderTasks = () => {
+    const taskComponentsList = [];
+    const sessionArray = JSON.parse(sessionStorage.getItem("taskList"));
+    for (let i = 0; i < sessionArray.length; i++) {
+      taskComponentsList.push(
+        <Task
+          value={sessionArray[i].value}
+          deleteFunc={deleteTaskRequest}
+          checkInput={setCheckInputToTrue}
+          noCheckInput={setCheckInputToFalse}
+          idValue={sessionArray[i].id}
+          key={sessionArray[i].id}
+          isChecked={sessionArray[i].checked}
+        />
+      );
+    }
+    setTaskComponents(taskComponentsList);
+  };
+
+  const setCheckInputToTrue = (id) => {
+    const tempArray = JSON.parse(sessionStorage.getItem("taskList"));
+    tempArray.forEach((element) => {
+      if (element.id === id) {
+        element.checked = true;
+      }
+    });
+    sessionStorage.setItem("taskList", JSON.stringify(tempArray));
+    console.log(sessionStorage.getItem("taskList"));
+    decreaseCount();
+  };
+
+  const setCheckInputToFalse = (id) => {
+    const tempArray = JSON.parse(sessionStorage.getItem("taskList"));
+    tempArray.forEach((element) => {
+      if (element.id === id) {
+        element.checked = false;
+      }
+    });
+    sessionStorage.setItem("taskList", JSON.stringify(tempArray));
+    console.log(sessionStorage.getItem("taskList"));
+    increaseCount();
+  };
+
+  const increaseCount = () => {
+    setPendingTask((prev) => prev + 1);
+  };
+
+  const decreaseCount = () => {
+    setPendingTask((prev) => prev - 1);
+  };
+
+  const deleteTaskRequest = (id) => {
+    setIdDeleteItem(id);
+  };
+
+  const deleteTask = (id) => {
+    const sessionArray = JSON.parse(sessionStorage.getItem("taskList"));
+
+    sessionArray.forEach((element) => {
+      if (element.id === id) {
+        if (!element.checked) {
+          decreaseCount();
+        }
+      }
+    });
+
+    const newSessionArray = sessionArray.filter((element) => {
+      return element.id !== id;
+    });
+
+    for (let i = 0; i < newSessionArray.length; i++) {
+      newSessionArray[i].id = i + 1;
+    }
+
+    sessionStorage.setItem("taskList", JSON.stringify(newSessionArray));
+    setIdDeleteItem(0);
+
+    renderTasks();
+    //setIdDeleteItem(0);
+    //setDeletingItem(true);
+    //setTaskComponents(newTaskComponentsList);
+  };
 
   const updateSessionVariable = () => {
     sessionStorage.setItem("taskList", JSON.stringify([]));
@@ -18,67 +135,14 @@ function App() {
     renderTasks();
   };
 
-  const deleteTask = (idValue) => {
-    const taskComponentsList = taskComponents;
-    const newTaskComponentsList = taskComponentsList.filter((element) => {
-      return element.props.idValue !== idValue;
-    });
-
-    decreaseCount();
-    setIdDeleteItem(0);
-    setDeletingItem(true);
-    setTaskComponents(newTaskComponentsList);
-  };
-
-  const increaseCount = () => {
-    setPendingTask((prev) => prev + 1);
-  };
-
-  const decreaseCount = () => {
-    if (pendingTask > 0) {
-      setPendingTask((prev) => prev - 1);
-    }
-  };
-
-  const deleteTaskRequest = (idValue) => {
-    setIdDeleteItem(idValue);
-  };
-
-  const renderTasks = () => {
-    const taskComponentsList = [];
-    const sessionArray = JSON.parse(sessionStorage.getItem("taskList"));
-    for (let i = 0; i < sessionArray.length; i++) {
-      taskComponentsList.push(
-        <Task
-          value={sessionArray[i]}
-          deleteFunc={deleteTaskRequest}
-          increaseCountFunc={increaseCount}
-          decreaseCountFunc={decreaseCount}
-          idValue={i + 1}
-          key={i + 1}
-        />
-      );
-    }
-    setTaskComponents(taskComponentsList);
-  };
-
-  const getInputData = (value) => {
-    if (sessionStorage.getItem("taskList") === null) {
-      sessionStorage.setItem("taskList", JSON.stringify([]));
-    }
-    const tempArray = JSON.parse(sessionStorage.getItem("taskList"));
-    tempArray.push(value);
-    sessionStorage.setItem("taskList", JSON.stringify(tempArray));
-    increaseCount();
-    renderTasks();
-  };
-
   const handleClearAllClick = () => {
     sessionStorage.setItem("taskList", JSON.stringify([]));
     setTaskComponents([]);
     setPendingTask(0);
     renderTasks();
   };
+
+  // UseEffect
 
   useEffect(() => {
     if (deletingItem) {
