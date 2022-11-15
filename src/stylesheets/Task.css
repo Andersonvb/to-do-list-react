@@ -7,11 +7,12 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 10px;
-  background-color: lightgray;
+  background-color: var(--neutral);
 }
 
 .task:hover {
-  background-color: lightblue;
+  color: #fff;
+  background-color: var(--blue);
 }
 
 .task__label {
