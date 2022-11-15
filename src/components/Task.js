@@ -19,7 +19,7 @@ function Task({ task, toggleComplete, removeTask }) {
         onClick={handleCheckboxClick}
         className="task__input"
       />
-      <label htmlFor={task.id} className="task__label">
+      <label htmlFor={task.id} className="task__label" id={task.id}>
         {task.value}
       </label>
       <MdDelete onClick={handleRemoveClick} className="task__remove" />
