@@ -1,15 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "./components/Header";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Bottom from "./components/Bottom";
 import "./App.css";
 
+const SESSION_STORAGE_KEY = "task-list";
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [pendingTasks, setPendingTasks] = useState(0);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    const storageTasks = JSON.parse(
+      sessionStorage.getItem(SESSION_STORAGE_KEY)
+    );
+
+    if (storageTasks) {
+      setTasks(storageTasks);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isFirstRender.current) {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(tasks));
+    } else {
+      isFirstRender.current = false;
+    }
+
     calculatePendingTask();
   }, [tasks]);
 
