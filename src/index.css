@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;900&display=swap');
 
 :root {
-  --blue: #256D85;
-  --dark-blue: #06283D;
-  --neutral: #E6F3F8;
+  --blue: #00bfa5;
+  --dark-blue: #008e76;
+  --neutral: #E1E2E1;
 }
 
 * {
